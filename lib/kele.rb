@@ -62,11 +62,6 @@ class Kele
 		end
 	end
 
-	private
-	def get_response page_id
-		self.class.get "/message_threads", headers: {'authorization' => @auth_token}, body: {'page' => page_id.to_s}
-	end
-
 	def create_submission checkpoint_id, assignment_branch, assignment_commit_link, comment
 		body = {
 			'checkpoint_id': checkpoint_id,
@@ -80,5 +75,10 @@ class Kele
 		rescue JSON::ParserError
 			response.body
 		end
+	end
+
+	private
+	def get_response page_id
+		self.class.get "/message_threads", headers: {'authorization' => @auth_token}, body: {'page' => page_id.to_s}
 	end
 end
