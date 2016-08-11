@@ -67,5 +67,18 @@ class Kele
 		self.class.get "/message_threads", headers: {'authorization' => @auth_token}, body: {'page' => page_id.to_s}
 	end
 
-
+	def create_submission checkpoint_id, assignment_branch, assignment_commit_link, comment
+		body = {
+			'checkpoint_id': checkpoint_id,
+			'assignment_branch': assignment_branch,
+			'assignment_commit_link': assignment_commit_link,
+			'comment': comment
+		}
+		response = self.class.post "/checkpoint_submissions", headers: {'authorization' => @auth_token}, body: body
+		begin
+			JSON.parse(response.body)
+		rescue JSON::ParserError
+			response.body
+		end
+	end
 end
