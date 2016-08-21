@@ -19,13 +19,11 @@ describe 'Kele', :vcr do
 
 	it "gets a specific page of messages" do
 		response = kele_instance.get_messages 1
-		puts response
 		expect(response["messages"]).to_not eq "Resource not found"
 	end
 
 	it "gets all pages messages" do
 		response = kele_instance.get_messages
-		puts response
 		expect(response[0]["messages"]).to_not eq "Resource not found"
 	end
 
