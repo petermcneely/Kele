@@ -63,14 +63,18 @@ class Kele
 	end
 
 	def create_submission checkpoint_id, assignment_branch, assignment_commit_link, comment, enrollment_id
-		body = {
-			'checkpoint_id': checkpoint_id.to_s,
-			'assignment_branch': assignment_branch,
-			'assignment_commit_link': assignment_commit_link,
-			'comment': comment,
-			'enrollment_id': enrollment_id.to_s
-		}
+		body = get_submission_body checkpoint_id, assignment_branch, assignment_commit_link, comment, enrollment_id
 		response = self.class.post "/checkpoint_submissions", headers: {'authorization' => @auth_token}, body: body
+		begin
+			JSON.parse(response.body)
+		rescue JSON::ParserError
+			response.body
+		end
+	end
+
+	def update_submission submission_id, assignment_branch, assignment_commit_link, checkpoint_id, comment, enrollment_id
+		body = get_submission_body checkpoint_id, assignment_branch, assignment_commit_link, comment, enrollment_id
+		response = self.class.put "/checkpoint_submissions/#{submission_id}", headers: {'authorization'=> @auth_token}, body: body
 		begin
 			JSON.parse(response.body)
 		rescue JSON::ParserError
@@ -81,5 +85,16 @@ class Kele
 	private
 	def get_response page_id
 		self.class.get "/message_threads", headers: {'authorization' => @auth_token}, body: {'page' => page_id.to_s}
+	end
+
+	def get_submission_body checkpoint_id, assignment_branch, assignment_commit_link, comment, enrollment_id
+		body = {
+			'checkpoint_id': checkpoint_id.to_s,
+			'assignment_branch': assignment_branch,
+			'assignment_commit_link': assignment_commit_link,
+			'comment': comment,
+			'enrollment_id': enrollment_id.to_s
+		}
+		body
 	end
 end
