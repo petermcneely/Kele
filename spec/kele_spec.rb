@@ -47,15 +47,15 @@ describe 'Kele', :vcr do
 	end
 
 	it "creates a submission" do
-		enrollment_id = kele_instance.get_me["current_enrollment"]
+		enrollment_id = kele_instance.get_me["current_enrollment"]["id"]
 		response = kele_instance.create_submission ENV["KELE_CHECKPOINT"], ENV["KELE_ASSIGNMENT_BRANCH"], ENV["KELE_ASSIGNMENT_COMMIT_LINK"], "Sent from Kele Test", enrollment_id
-		puts response
+		expect(response["enrollment_id"]).to eq enrollment_id
 	end
 
 	it "updates a submission" do
-		enrollment_id = kele_instance.get_me["current_enrollment"]
+		enrollment_id = kele_instance.get_me["current_enrollment"]["id"]
 		response = kele_instance.update_submission ENV["KELE_SUBMISSION_ID"], ENV["KELE_ASSIGNMENT_BRANCH"], ENV["KELE_ASSIGNMENT_COMMIT_LINK"], ENV["KELE_CHECKPOINT"], "Updated from Kele Test", enrollment_id
-		puts response
+		expect(response["enrollment_id"]).to eq enrollment_id
 	end
 
 	it "gets a roadmap" do
